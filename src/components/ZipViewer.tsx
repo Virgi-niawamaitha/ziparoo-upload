@@ -1,10 +1,10 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Folder, FileText, ChevronRight, ChevronDown } from "lucide-react";
+import { ArrowLeft, Folder, FileText } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { formatFileSize } from "@/utils/fileUtils";
+import { formatFileSize, isTextFile } from "@/utils/fileUtils";
 import JSZip from "jszip";
 
 interface ZipEntry {
@@ -41,7 +41,18 @@ const ZipViewer = ({ file, onReset }: ZipViewerProps) => {
         for (const [path, zipEntry] of Object.entries(contents.files)) {
           const isDirectory = path.endsWith('/');
           const name = path.split('/').pop() || path;
-          const size = zipEntry._data ? zipEntry._data.uncompressedSize : 0;
+          
+          // Get file size or default to 0 for directories
+          let size = 0;
+          if (!isDirectory) {
+            // Safely get the size without accessing internal properties
+            try {
+              const blob = await zipEntry.async("blob");
+              size = blob.size;
+            } catch (e) {
+              console.error("Failed to get size for", path, e);
+            }
+          }
           
           const entry: ZipEntry = {
             name,
@@ -90,11 +101,15 @@ const ZipViewer = ({ file, onReset }: ZipViewerProps) => {
         const zipObject = contents.file(entry.path);
         
         if (zipObject) {
-          // Try to read as text first
-          try {
-            const content = await zipObject.async("string");
-            entry.content = content;
-          } catch (err) {
+          // Check if it's a text file before trying to display it
+          if (isTextFile(entry.name)) {
+            try {
+              const content = await zipObject.async("string");
+              entry.content = content;
+            } catch (err) {
+              entry.content = "This file cannot be displayed (binary content)";
+            }
+          } else {
             entry.content = "This file cannot be displayed (binary content)";
           }
         }
