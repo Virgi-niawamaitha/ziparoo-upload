@@ -3,15 +3,18 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import UploadZone from "./UploadZone";
 import { useToast } from "@/components/ui/use-toast";
+import { isZipFile } from "@/utils/fileUtils";
+import ZipViewer from "./ZipViewer";
 
 const FileUpload = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [zipFile, setZipFile] = useState<File | null>(null);
   const { toast } = useToast();
 
   const handleUpload = async (file: File) => {
     // Check if it's a zip file
-    if (!file.name.toLowerCase().endsWith('.zip')) {
+    if (!isZipFile(file)) {
       toast({
         title: "Invalid file type",
         description: "Please upload a ZIP file",
@@ -22,18 +25,19 @@ const FileUpload = () => {
 
     setIsUploading(true);
     setUploadSuccess(false);
+    setZipFile(null);
 
     try {
-      // Simulate upload process with a delay
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      
-      // This is where you would normally send the file to a server
+      // Process the ZIP file
       console.log("File uploaded:", file.name, "Size:", (file.size / 1024 / 1024).toFixed(2), "MB");
       
+      // Store the ZIP file for viewing
+      setZipFile(file);
       setUploadSuccess(true);
+      
       toast({
         title: "Upload successful",
-        description: `${file.name} has been uploaded`,
+        description: `${file.name} has been uploaded and extracted`,
       });
     } catch (error) {
       toast({
@@ -49,6 +53,7 @@ const FileUpload = () => {
 
   const resetUpload = () => {
     setUploadSuccess(false);
+    setZipFile(null);
   };
 
   return (
@@ -60,12 +65,16 @@ const FileUpload = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <UploadZone 
-          onUpload={handleUpload}
-          isUploading={isUploading}
-          uploadSuccess={uploadSuccess}
-          resetUpload={resetUpload}
-        />
+        {zipFile && uploadSuccess ? (
+          <ZipViewer file={zipFile} onReset={resetUpload} />
+        ) : (
+          <UploadZone 
+            onUpload={handleUpload}
+            isUploading={isUploading}
+            uploadSuccess={uploadSuccess}
+            resetUpload={resetUpload}
+          />
+        )}
       </CardContent>
     </Card>
   );

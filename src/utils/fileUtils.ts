@@ -19,3 +19,24 @@ export const isZipFile = (file: File): boolean => {
          file.type === 'application/zip' || 
          file.type === 'application/x-zip-compressed';
 };
+
+/**
+ * Gets a file extension
+ */
+export const getFileExtension = (filename: string): string => {
+  return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
+};
+
+/**
+ * Determines if a file is a text file that can be displayed
+ */
+export const isTextFile = (filename: string): boolean => {
+  const textExtensions = [
+    'txt', 'md', 'json', 'js', 'jsx', 'ts', 'tsx', 'html', 'css', 'scss',
+    'xml', 'svg', 'yaml', 'yml', 'sh', 'bat', 'c', 'cpp', 'java', 'py',
+    'rb', 'php', 'go', 'rust', 'swift', 'kt', 'config', 'ini', 'env'
+  ];
+  
+  const ext = getFileExtension(filename).toLowerCase();
+  return textExtensions.includes(ext);
+};
