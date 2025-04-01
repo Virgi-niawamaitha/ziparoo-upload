@@ -1919,7 +1919,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             .song-help-content h3 {
-              color: var(--secondary);
+              color: green;
               margin-bottom: 1.5rem;
               font-size: 1.5rem;
               text-align: center;
