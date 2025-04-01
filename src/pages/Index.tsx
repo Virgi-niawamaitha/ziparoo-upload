@@ -83,14 +83,29 @@ const Index = () => {
             onClick={() => setIsFlipped(!isFlipped)}
           >
             <div className="flip-card-inner">
-              {/* Front of card */}
-              <div className="flip-card-front bg-gradient-to-br from-yellow-400 to-red-500 rounded-xl shadow-2xl p-6 flex flex-col items-center justify-center text-center">
-                <Image size={60} className="mb-4 text-white" />
-                <h3 className="text-2xl font-bold text-white mb-2">A Special Message</h3>
-                <p className="text-white/90 mb-4">Click to reveal</p>
-                <Button variant="outline" className="bg-white/20 border-white text-white hover:bg-white/30">
-                  Tap to Flip
-                </Button>
+              {/* Front of card - with Thomas's photo as background */}
+              <div 
+                className="flip-card-front rounded-xl shadow-2xl p-6 flex flex-col items-center justify-center text-center relative overflow-hidden"
+              >
+                {/* Background image - replace with Thomas's photo when available */}
+                <div className="absolute inset-0 z-0">
+                  <img 
+                    src="https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9" 
+                    alt="Thomas background" 
+                    className="w-full h-full object-cover opacity-80"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                </div>
+                
+                {/* Content on top of the background */}
+                <div className="relative z-10">
+                  <Image size={60} className="mb-4 text-white" />
+                  <h3 className="text-2xl font-bold text-white mb-2">A Special Message</h3>
+                  <p className="text-white/90 mb-4">Click to reveal</p>
+                  <Button variant="outline" className="bg-white/20 border-white text-white hover:bg-white/30">
+                    Tap to Flip
+                  </Button>
+                </div>
               </div>
               
               {/* Back of card */}
