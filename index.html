@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy Birthday Thomas!</title>
+    <meta name="description" content="A birthday celebration for Thomas" />
+    <link rel="stylesheet" href="styles.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+  </head>
+
+  <body>
+    <div class="page-loader">
+      <div class="loader-content">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Loading Thomas's Special Day...</div>
+      </div>
+    </div>
+    
+    <div class="container">
+      <!-- Header Section -->
+      <header class="header animate-fade-in">
+        <div class="header-decoration left"></div>
+        <div class="header-decoration right"></div>
+        <h1>Happy Birthday Thomas!</h1>
+        <p>April 3rd is your special day</p>
+        <div class="timezone-note"></div>
+        <div class="countdown">
+          <span class="icon">🎂</span>
+          <p id="countdown-timer">Loading countdown...</p>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Nature Section -->
+        <div class="nature-section animate-fade-in">
+          <div class="nature-card">
+            <div class="image-container">
+              <img 
+                src="https://images.unsplash.com/photo-1472396961693-142e6e269027" 
+                alt="Nature scene with deer"
+                class="nature-image"
+              />
+              <div class="image-caption">
+                <h3><span class="icon">📷</span> Nature's Beauty</h3>
+              </div>
+            </div>
+            <div class="card-badge">Captured Moments</div>
+          </div>
+          
+          <div class="message-card">
+            <h2><span class="icon">🚩</span> For Thomas</h2>
+            <p>
+              Wishing you a day filled with joy, laughter, and all the things that make you smile. 
+              Your passion for nature, photography, and art inspires everyone around you.
+            </p>
+            <div class="shine-effect"></div>
+          </div>
+        </div>
+
+        <!-- Flip Card -->
+        <div class="flip-card-container animate-fade-in">
+          <div id="flip-card" class="flip-card">
+            <div class="flip-card-inner">
+              <!-- Front of card with Thomas's photo as background -->
+              <div class="flip-card-front">
+                <div class="card-bg">
+                  <img 
+                    src="images/profile.jpg" 
+                    alt="Thomas background" 
+                    class="card-bg-image"
+                  />
+                  <div class="card-gradient"></div>
+                </div>
+                
+                <div class="card-content">
+                  <span class="icon large">✉️</span>
+                  <h3>A Special Message</h3>
+                  
+                  <button id="flip-button" class="flip-button">
+                    <span>Tap to Flip</span>
+                    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Back of card -->
+              <div class="flip-card-back">
+                <h3>Happy Birthday!</h3>
+                <p>
+                  Thomas, thank you for being such an amazing person in our lives.
+                  Your guidance, support, and love towards us means the world to us.
+                  I'm grateful that we have you in our life.
+                </p>
+                <p class="highlight">Wishing you many more years of happiness!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      
+      <!-- Gallery section -->
+      <div class="gallery-section animate-fade-in">
+        <h2>Nature's Gallery</h2>
+        <div class="gallery">
+          <div class="gallery-item hover-scale">
+            <img src="https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07" alt="Nature 1" />
+            <div class="gallery-overlay">
+              <div class="gallery-icon">🔍</div>
+            </div>
+          </div>
+          <div class="gallery-item hover-scale">
+            <img src="https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9" alt="Nature 2" />
+            <div class="gallery-overlay">
+              <div class="gallery-icon">🔍</div>
+            </div>
+          </div>
+          <div class="gallery-item hover-scale">
+            <img src="https://images.unsplash.com/photo-1518495973542-4542c06a5843" alt="Nature 3" />
+            <div class="gallery-overlay">
+              <div class="gallery-icon">🔍</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Wishes section -->
+      <div class="wishes-section animate-fade-in">
+        <h2>Birthday Wishes</h2>
+        <div class="wishes-container">
+          <div class="wish-card">
+            <div class="wish-icon">💝</div>
+            <p>"Wishing you a wonderful birthday filled with adventures and beautiful moments to capture!"</p>
+            <div class="wish-author">-  Wifey</div>
+          </div>
+          <div class="wish-card">
+            <div class="wish-icon">🎊</div>
+            <p>"Your eye for beauty in nature has always amazed me. Happy birthday to a true artist!"</p>
+            <div class="wish-author">- John</div>
+          </div>
+          <div class="wish-card">
+            <div class="wish-icon">🌟</div>
+            <p>"May this year bring you endless opportunities to explore and photograph the wonders of our world."</p>
+            <div class="wish-author">- Virgie</div>
+          </div>
+        </div>
+      </div>
+      
+      <footer class="footer">
+        <div class="footer-content">
+          <p>Made with ❤️ for Thomas</p>
+          <p class="copyright">© 2023 | Birthday Celebration</p>
+          <button id="preview-button" class="preview-button">Preview Birthday Celebration</button>
+          <p class="song-note">Want to add a custom song? <a href="#" id="song-help">Click here</a> for instructions.</p>
+        </div>
+        <button id="back-to-top" class="back-to-top" aria-label="Back to top">
+          <svg width="20" height="20" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7.14645 2.14645C7.34171 1.95118 7.65829 1.95118 7.85355 2.14645L11.8536 6.14645C12.0488 6.34171 12.0488 6.65829 11.8536 6.85355C11.6583 7.04882 11.3417 7.04882 11.1464 6.85355L7.5 3.20711L3.85355 6.85355C3.65829 7.04882 3.34171 7.04882 3.14645 6.85355C2.95118 6.65829 2.95118 6.34171 3.14645 6.14645L7.14645 2.14645ZM7.5 12.5C7.77614 12.5 8 12.2761 8 12V2.5C8 2.22386 7.77614 2 7.5 2C7.22386 2 7 2.22386 7 2.5V12C7 12.2761 7.22386 12.5 7.5 12.5Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path>
+          </svg>
+        </button>
+      </footer>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
