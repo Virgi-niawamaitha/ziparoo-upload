@@ -36,8 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // If birthday has passed this year, set for next year
     if (now > birthdayThisYear) {
-      // Check if next year is a leap year
-      const isLeapYear = (nextYear % 4 === 0 && nextYear % 100 !== 0) || (nextYear % 400 === 0);
+      // Next birthday calculation with correct leap year handling
       const nextBirthday = new Date(nextYear, 3, 3); // April 3rd next year
       
       const difference = nextBirthday.getTime() - now.getTime();
@@ -45,6 +44,13 @@ document.addEventListener('DOMContentLoaded', function() {
       days = Math.floor(difference / (1000 * 60 * 60 * 24));
       hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      
+      // If exactly 366 days, update text accordingly
+      if (days === 366) {
+        countdownText = "366 days until your next birthday!";
+      } else {
+        countdownText = `${days} days, ${hours} hours, ${minutes} minutes until your next birthday!`;
+      }
     } else {
       // Birthday is still coming up this year
       const difference = birthdayThisYear.getTime() - now.getTime();
@@ -52,9 +58,10 @@ document.addEventListener('DOMContentLoaded', function() {
       days = Math.floor(difference / (1000 * 60 * 60 * 24));
       hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      
+      countdownText = `${days} days, ${hours} hours, ${minutes} minutes until your birthday!`;
     }
     
-    countdownText = `${days} days, ${hours} hours, ${minutes} minutes until your next birthday!`;
     countdownElement.textContent = countdownText;
   }
   
