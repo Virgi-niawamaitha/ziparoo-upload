@@ -12,20 +12,35 @@ const Index = () => {
   useEffect(() => {
     const calculateCountdown = () => {
       const now = new Date();
-      const birthdayThisYear = new Date(now.getFullYear(), 3, 3); // Month is 0-indexed, so 3 is April
+      const currentYear = now.getFullYear();
+      const nextYear = currentYear + 1;
+      
+      // Create date for this year's birthday (April 3rd)
+      const birthdayThisYear = new Date(currentYear, 3, 3); // Month is 0-indexed, so 3 is April
       
       // If birthday has passed this year, set for next year
       if (now > birthdayThisYear) {
-        birthdayThisYear.setFullYear(birthdayThisYear.getFullYear() + 1);
+        // Check if next year is a leap year
+        const isLeapYear = (nextYear % 4 === 0 && nextYear % 100 !== 0) || (nextYear % 400 === 0);
+        const nextBirthday = new Date(nextYear, 3, 3); // April 3rd next year
+        
+        const difference = nextBirthday.getTime() - now.getTime();
+        
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        
+        setCountdown(`${days} days, ${hours} hours, ${minutes} minutes`);
+      } else {
+        // Birthday is still coming up this year
+        const difference = birthdayThisYear.getTime() - now.getTime();
+        
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        
+        setCountdown(`${days} days, ${hours} hours, ${minutes} minutes`);
       }
-      
-      const difference = birthdayThisYear.getTime() - now.getTime();
-      
-      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-      
-      setCountdown(`${days} days, ${hours} hours, ${minutes} minutes`);
     };
     
     calculateCountdown();
