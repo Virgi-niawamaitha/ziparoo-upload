@@ -980,7 +980,7 @@ body {
 .song-note {
   font-size: 0.85rem;
   margin-top: 10px;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(34, 139, 34, 0.8);
 }
 
 .song-note a {
