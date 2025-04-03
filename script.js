@@ -13,6 +13,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Check if we need to resume confetti on page load
         resumeConfettiIfNeeded();
+        
+        // Check if we should show the surprise
+        checkAndShowSurprise();
       }, 500);
     });
     
@@ -240,6 +243,118 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
     
+    // Function to play birthday song
+    function playBirthdaySong() {
+      // Create or get audio element
+      let audio = document.getElementById('birthday-song');
+      
+      // If audio element doesn't exist, create it
+      if (!audio) {
+        audio = document.createElement('audio');
+        audio.id = 'birthday-song';
+        audio.preload = 'auto'; // Preload the audio
+        audio.autoplay = true;  // Enable autoplay
+        
+        // Check if a custom song has been set in localStorage
+        const customSongUrl = localStorage.getItem('custom-birthday-song');
+        
+        // Use custom song if available, otherwise use the local music file
+        if (customSongUrl) {
+          audio.src = customSongUrl;
+        } else {
+          // Use the local music file in the music folder
+          audio.src = 'music/happy-birthday-314197.mp3';
+        }
+        
+        audio.loop = true;
+        audio.volume = 0.5;
+        
+        // Add audio controls for user interaction
+        const audioControls = document.createElement('div');
+        audioControls.className = 'audio-controls';
+        
+        const muteButton = document.createElement('button');
+        muteButton.innerHTML = '🔊';
+        muteButton.className = 'audio-button';
+        muteButton.addEventListener('click', () => {
+          if (audio.muted) {
+            audio.muted = false;
+            muteButton.innerHTML = '🔊';
+          } else {
+            audio.muted = true;
+            muteButton.innerHTML = '🔇';
+          }
+        });
+        
+        audioControls.appendChild(muteButton);
+        
+        // Add a button to change the song
+        const changeSongButton = document.createElement('button');
+        changeSongButton.innerHTML = '🎵';
+        changeSongButton.className = 'audio-button change-song';
+        changeSongButton.title = 'Change Birthday Song';
+        changeSongButton.addEventListener('click', () => {
+          const newSongUrl = prompt('Enter the URL of your custom birthday song or use "default" to use the local music file:', customSongUrl || '');
+          if (newSongUrl && newSongUrl.trim() !== '') {
+            if (newSongUrl.toLowerCase() === 'default') {
+              // Reset to default local music
+              localStorage.removeItem('custom-birthday-song');
+              audio.src = 'music/happy-birthday-314197.mp3';
+            } else {
+              // Save the custom song URL
+              localStorage.setItem('custom-birthday-song', newSongUrl);
+              audio.src = newSongUrl;
+            }
+            
+            // Play the updated song immediately
+            audio.play().catch(error => {
+              alert('Error playing song. Please check if the URL is correct and try again.');
+              console.error('Error playing audio:', error);
+            });
+          }
+        });
+        
+        audioControls.appendChild(changeSongButton);
+        
+        // Add reset button to go back to local song
+        const resetButton = document.createElement('button');
+        resetButton.innerHTML = '🏠';
+        resetButton.className = 'audio-button reset-song';
+        resetButton.title = 'Use Local Music';
+        resetButton.addEventListener('click', () => {
+          // Reset to default local music
+          localStorage.removeItem('custom-birthday-song');
+          audio.src = 'music/happy-birthday-314197.mp3';
+          audio.play().catch(error => {
+            console.error('Error playing audio:', error);
+          });
+        });
+        
+        audioControls.appendChild(resetButton);
+        document.body.appendChild(audioControls);
+        document.body.appendChild(audio);
+      }
+      
+      // Always play the song immediately
+      audio.currentTime = 0;
+      
+      // Force play the audio
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.error('Error playing audio:', error);
+          // If autoplay fails, try playing on first user interaction
+          const playOnInteraction = () => {
+            audio.play();
+            document.removeEventListener('click', playOnInteraction);
+            document.removeEventListener('touchstart', playOnInteraction);
+          };
+          document.addEventListener('click', playOnInteraction);
+          document.addEventListener('touchstart', playOnInteraction);
+        });
+      }
+    }
+    
     // Function to activate the birthday surprise with music and animations
     function activateBirthdaySurprise() {
       // Create surprise overlay container
@@ -256,7 +371,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Add CSS for the surprise elements
       addSurpriseStyles();
       
-      // Play birthday song
+      // Play birthday song immediately
       playBirthdaySong();
       
       // Add close button to dismiss the surprise
@@ -267,7 +382,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Fade out the surprise overlay
         surpriseOverlay.classList.add('surprise-exit');
         
-        // Stop the music
+        // Stop the music immediately
         const audio = document.getElementById('birthday-song');
         if (audio) {
           audio.pause();
@@ -280,22 +395,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1000);
       });
       surpriseOverlay.appendChild(closeButton);
-      
-      // Add a notice about one-time appearance
-      const appearanceNote = document.createElement('div');
-      appearanceNote.className = 'appearance-note';
-      appearanceNote.textContent = 'This surprise appears once per day on Thomas\'s birthday';
-      appearanceNote.style.cssText = `
-        position: absolute;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 12px;
-        color: rgba(255, 255, 255, 0.7);
-        text-align: center;
-        max-width: 90%;
-      `;
-      surpriseOverlay.appendChild(appearanceNote);
       
       // Animate the surprise entrance
       requestAnimationFrame(() => {
@@ -473,137 +572,6 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
           container.removeChild(particle);
         }, duration * 1000);
-      }
-    }
-    
-    // Function to play birthday song
-    function playBirthdaySong() {
-      // Create audio element if it doesn't exist
-      if (!document.getElementById('birthday-song')) {
-        const audio = document.createElement('audio');
-        audio.id = 'birthday-song';
-        
-        // Check if a custom song has been set in localStorage
-        const customSongUrl = localStorage.getItem('custom-birthday-song');
-        
-        // Use custom song if available, otherwise use the local music file
-        if (customSongUrl) {
-          audio.src = customSongUrl;
-        } else {
-          // Use the local music file in the music folder
-          audio.src = 'music/happy-birthday-314197.mp3';
-        }
-        
-        audio.loop = true;
-        audio.volume = 0.5;
-        
-        // Add audio controls for user interaction
-        const audioControls = document.createElement('div');
-        audioControls.className = 'audio-controls';
-        
-        const muteButton = document.createElement('button');
-        muteButton.innerHTML = '🔊';
-        muteButton.className = 'audio-button';
-        muteButton.addEventListener('click', () => {
-          if (audio.muted) {
-            audio.muted = false;
-            muteButton.innerHTML = '🔊';
-          } else {
-            audio.muted = true;
-            muteButton.innerHTML = '🔇';
-          }
-        });
-        
-        audioControls.appendChild(muteButton);
-        
-        // Add a button to change the song
-        const changeSongButton = document.createElement('button');
-        changeSongButton.innerHTML = '🎵';
-        changeSongButton.className = 'audio-button change-song';
-        changeSongButton.title = 'Change Birthday Song';
-        changeSongButton.addEventListener('click', () => {
-          const newSongUrl = prompt('Enter the URL of your custom birthday song or use "default" to use the local music file:', customSongUrl || '');
-          if (newSongUrl && newSongUrl.trim() !== '') {
-            if (newSongUrl.toLowerCase() === 'default') {
-              // Reset to default local music
-              localStorage.removeItem('custom-birthday-song');
-              audio.src = 'music/happy-birthday-314197.mp3';
-            } else {
-              // Save the custom song URL
-              localStorage.setItem('custom-birthday-song', newSongUrl);
-              audio.src = newSongUrl;
-            }
-            
-            // Play the updated song
-            audio.play().catch(error => {
-              alert('Error playing song. Please check if the URL is correct and try again.');
-              console.error('Error playing audio:', error);
-            });
-          }
-        });
-        
-        audioControls.appendChild(changeSongButton);
-        
-        // Add reset button to go back to local song
-        const resetButton = document.createElement('button');
-        resetButton.innerHTML = '🏠';
-        resetButton.className = 'audio-button reset-song';
-        resetButton.title = 'Use Local Music';
-        resetButton.addEventListener('click', () => {
-          // Reset to default local music
-          localStorage.removeItem('custom-birthday-song');
-          audio.src = 'music/happy-birthday-314197.mp3';
-          audio.play().catch(error => {
-            console.error('Error playing audio:', error);
-          });
-        });
-        
-        audioControls.appendChild(resetButton);
-        document.body.appendChild(audioControls);
-        document.body.appendChild(audio);
-        
-        // Add styles for the song buttons
-        const audioButtonStyles = document.createElement('style');
-        audioButtonStyles.textContent = `
-          .change-song {
-            margin-left: 8px;
-            background: linear-gradient(135deg, #ff9966, #ff5e62);
-          }
-          .change-song:hover {
-            background: linear-gradient(135deg, #ff5e62, #ff9966);
-          }
-          .reset-song {
-            margin-left: 8px;
-            background: linear-gradient(135deg, #3498db, #2980b9);
-          }
-          .reset-song:hover {
-            background: linear-gradient(135deg, #2980b9, #3498db);
-          }
-        `;
-        document.head.appendChild(audioButtonStyles);
-        
-        // Play audio (this may require user interaction on some browsers)
-        try {
-          const playPromise = audio.play();
-          if (playPromise !== undefined) {
-            playPromise.catch(error => {
-              // Auto-play was prevented, show a message to the user
-              console.log('Auto-play prevented. Please interact with the page to enable sound.');
-              
-              // Create a play button
-              const playButton = document.createElement('button');
-              playButton.className = 'audio-play-button';
-              playButton.innerHTML = 'Play Birthday Song';
-              playButton.addEventListener('click', () => {
-                audio.play();
-                playButton.style.display = 'none';
-              });
-              document.body.appendChild(playButton);
-            });
-          }
-        } catch (e) {
-          console.log('Error playing audio:', e);
-        }
       }
     }
     
@@ -1919,7 +1887,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             .song-help-content h3 {
-              color: green;
+              color: var(--secondary);
               margin-bottom: 1.5rem;
               font-size: 1.5rem;
               text-align: center;
@@ -2043,6 +2011,14 @@ document.addEventListener('DOMContentLoaded', function() {
           }, 5 * 60 * 1000);
         }
       }
+    }
+    
+    // Function to check if we should show the surprise
+    function checkAndShowSurprise() {
+      // Show surprise after 5 seconds on every page load
+      setTimeout(() => {
+        activateBirthdaySurprise();
+      }, 5000);
     }
   });
   
