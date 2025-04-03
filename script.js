@@ -253,7 +253,6 @@ document.addEventListener('DOMContentLoaded', function() {
         audio = document.createElement('audio');
         audio.id = 'birthday-song';
         audio.preload = 'auto'; // Preload the audio
-        audio.autoplay = true;  // Enable autoplay
         
         // Check if a custom song has been set in localStorage
         const customSongUrl = localStorage.getItem('custom-birthday-song');
@@ -343,14 +342,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (playPromise !== undefined) {
         playPromise.catch(error => {
           console.error('Error playing audio:', error);
-          // If autoplay fails, try playing on first user interaction
-          const playOnInteraction = () => {
-            audio.play();
-            document.removeEventListener('click', playOnInteraction);
-            document.removeEventListener('touchstart', playOnInteraction);
-          };
-          document.addEventListener('click', playOnInteraction);
-          document.addEventListener('touchstart', playOnInteraction);
+          // If autoplay fails, we'll handle it in the gift box click event
         });
       }
     }
@@ -370,9 +362,6 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // Add CSS for the surprise elements
       addSurpriseStyles();
-      
-      // Play birthday song immediately
-      playBirthdaySong();
       
       // Add close button to dismiss the surprise
       const closeButton = document.createElement('button');
@@ -401,8 +390,12 @@ document.addEventListener('DOMContentLoaded', function() {
         surpriseOverlay.classList.add('surprise-active');
       });
       
-      // Make the gift clickable to reveal a special message
+      // Make the gift clickable to reveal a special message and play music
       giftBox.addEventListener('click', () => {
+        // Play the birthday song when the gift is clicked
+        playBirthdaySong();
+        
+        // Open the gift to reveal the message
         openGift(giftBox, surpriseOverlay);
       });
     }
@@ -619,7 +612,7 @@ document.addEventListener('DOMContentLoaded', function() {
           align-items: center;
           justify-content: center;
           transition: background 0.3s;
-          z-index: 10001;
+          z-index: 10006; /* Increased z-index to ensure it's always on top */
         }
         
         .surprise-close:hover {
@@ -793,6 +786,8 @@ document.addEventListener('DOMContentLoaded', function() {
           perspective: 1000px;
           z-index: 10003;
           animation: message-appear 1s forwards;
+          /* Add margin-top to ensure it doesn't cover the close button */
+          margin-top: 60px;
         }
         
         @keyframes message-appear {
@@ -977,6 +972,34 @@ document.addEventListener('DOMContentLoaded', function() {
         .audio-play-button:hover {
           background: var(--primary-light);
           transform: translate(-50%, -50%) scale(1.05);
+        }
+        
+        /* Mobile-specific styles */
+        @media (max-width: 768px) {
+          .birthday-message-card {
+            margin-top: 80px; /* More space on mobile to avoid covering the close button */
+            width: 85%;
+          }
+          
+          .surprise-close {
+            top: 15px;
+            right: 15px;
+            width: 45px; /* Slightly larger on mobile for easier tapping */
+            height: 45px;
+            font-size: 28px;
+          }
+          
+          .birthday-special-message {
+            padding: 20px;
+          }
+          
+          .birthday-special-message h2 {
+            font-size: 28px;
+          }
+          
+          .birthday-special-message p {
+            font-size: 16px;
+          }
         }
       `;
       
